@@ -1,12 +1,13 @@
-# Smart Academic Notes Assistant
+# Smart Notes Assistant
 
-This project demonstrates the fundamentals of Large Language Models (LLMs)
-using a simple prompt-response interaction.
+Production-grade Retrieval-Augmented Generation (RAG) system for intelligent note understanding and Q&A.
 
-Later stages of the project will extend this into a Retrieval-Augmented
-Generation (RAG) system using vector databases.
+## Features
+- Modular ingestion & preprocessing
+- Vector search using FAISS
+- LLM-based generation
+- Evaluation metrics (Recall@K, MRR)
+- API-ready & Docker-ready
 
-## Day 1 Objectives
-- Understand what a Large Language Model is
-- Run a simple prompt-response demo
-- Set up a clean project structure
+## Status
+🚧 Under active development

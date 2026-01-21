@@ -1,44 +1,84 @@
 from typing import List
+
 from smart_notes.core.interfaces import (
-    DocumentLoader,
     Chunker,
     Embedder,
     VectorStore,
     LLM,
 )
 from smart_notes.core.types import Document
+from smart_notes.ingestion.factory import LoaderFactory
 
 
 class RAGPipeline:
+    """
+    End-to-end Retrieval-Augmented Generation (RAG) pipeline.
+
+    Responsibilities:
+    - Ingest documents of multiple formats (txt, pdf, etc.)
+    - Chunk and embed text
+    - Store embeddings in a vector database
+    - Retrieve relevant context and generate answers using an LLM
+    """
+
     def __init__(
         self,
-        loader: DocumentLoader,
         chunker: Chunker,
         embedder: Embedder,
         vector_store: VectorStore,
         llm: LLM,
     ):
-        self.loader = loader
         self.chunker = chunker
         self.embedder = embedder
         self.vector_store = vector_store
         self.llm = llm
 
-    def ingest(self, source: str):
-        documents: List[Document] = self.loader.load(source)
+    def ingest(self, source: str) -> None:
+        """
+        Ingest a document source (txt, pdf, etc.) into the vector store.
+        """
+
+        loader = LoaderFactory.get_loader(source)
+        documents: List[Document] = loader.load(source)
 
         for doc in documents:
             chunks = self.chunker.chunk(doc.text)
+
             embeddings = self.embedder.embed(chunks)
 
-            metadata = [{"source": source} for _ in chunks]
-            self.vector_store.add(embeddings, metadata)
+            metadatas = [
+                {
+                    **doc.metadata,
+                    "chunk_id": idx,
+                }
+                for idx in range(len(chunks))
+            ]
+
+            self.vector_store.add(
+                embeddings=embeddings,
+                texts=chunks,
+                metadata=metadatas,
+            )
 
     def query(self, question: str, top_k: int = 5) -> str:
-        query_embedding = self.embedder.embed([question])[0]
-        results = self.vector_store.search(query_embedding, top_k)
+        """
+        Answer a question using retrieved context + LLM.
+        """
 
-        context = "\n".join([r.text for r in results])
-        prompt = f"Context:\n{context}\n\nQuestion: {question}\nAnswer:"
+        query_embedding = self.embedder.embed([question])[0]
+
+        results = self.vector_store.search(
+            query_embedding=query_embedding,
+            top_k=top_k,
+        )
+
+        context = "\n\n".join(result.text for result in results)
+
+        prompt = (
+            "You are a helpful assistant.\n\n"
+            f"Context:\n{context}\n\n"
+            f"Question: {question}\n"
+            "Answer:"
+        )
 
         return self.llm.generate(prompt)

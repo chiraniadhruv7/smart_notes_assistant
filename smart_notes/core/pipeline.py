@@ -8,6 +8,8 @@ from smart_notes.core.interfaces import (
 )
 from smart_notes.core.types import Document
 from smart_notes.ingestion.factory import LoaderFactory
+from smart_notes.retrieval.retriever import Retriever
+
 
 
 class RAGPipeline:
@@ -61,24 +63,22 @@ class RAGPipeline:
             )
 
     def query(self, question: str, top_k: int = 5) -> str:
-        """
-        Answer a question using retrieved context + LLM.
-        """
+        retriever = Retriever(
+        embedder=self.embedder,
+        vector_store=self.vector_store,
+        top_k=top_k,
+    )
 
-        query_embedding = self.embedder.embed([question])[0]
+        results = retriever.retrieve(question)
 
-        results = self.vector_store.search(
-            query_embedding=query_embedding,
-            top_k=top_k,
-        )
-
-        context = "\n\n".join(result.text for result in results)
+        context = "\n\n".join(r.text for r in results)
 
         prompt = (
-            "You are a helpful assistant.\n\n"
-            f"Context:\n{context}\n\n"
-            f"Question: {question}\n"
-            "Answer:"
-        )
+        "You are a helpful assistant.\n\n"
+        f"Context:\n{context}\n\n"
+        f"Question: {question}\n"
+        "Answer:"
+    )
 
         return self.llm.generate(prompt)
+

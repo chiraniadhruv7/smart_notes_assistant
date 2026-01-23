@@ -1,13 +1,18 @@
 from typing import List
 import numpy as np
+from sentence_transformers import SentenceTransformer
+
 from smart_notes.core.interfaces import Embedder
 
 
-class DummyEmbeddingModel(Embedder):
-    """
-    Placeholder embedder.
-    Replace with SentenceTransformers / OpenAI later.
-    """
+class SentenceTransformerEmbedder(Embedder):
+    def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
+        self.model = SentenceTransformer(model_name)
 
     def embed(self, texts: List[str]):
-        return np.random.rand(len(texts), 384)
+        embeddings = self.model.encode(
+            texts,
+            convert_to_numpy=True,
+            normalize_embeddings=True,
+        )
+        return embeddings.astype("float32")

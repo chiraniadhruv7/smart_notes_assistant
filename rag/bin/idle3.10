@@ -1,5 +1,0 @@
-#!/Users/yashchirania/Downloads/smart_notes_assistant/rag/bin/python3.10
-
-from idlelib.pyshell import main
-if __name__ == '__main__':
-    main()

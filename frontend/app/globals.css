@@ -1,0 +1,192 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg-primary: #212121;
+  --bg-secondary: #171717;
+  --bg-tertiary: #2f2f2f;
+  --bg-hover: #333333;
+  --text-primary: #ececec;
+  --text-secondary: #b4b4b4;
+  --text-muted: #8e8e8e;
+  --border: #444444;
+  --accent: #10a37f;
+  --accent-hover: #1a7f64;
+  --user-bg: #2f2f2f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ── Scrollbar ──────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Prose / Markdown ──────────────────────────────── */
+.prose {
+  @apply leading-7 text-[var(--text-primary)];
+  font-size: 15px;
+}
+
+.prose p {
+  @apply mb-4;
+}
+
+.prose p:last-child {
+  @apply mb-0;
+}
+
+.prose h1,
+.prose h2,
+.prose h3 {
+  @apply font-semibold mt-6 mb-3 text-white;
+}
+
+.prose h1 {
+  @apply text-xl;
+}
+
+.prose h2 {
+  @apply text-lg;
+}
+
+.prose h3 {
+  @apply text-base;
+}
+
+.prose ul,
+.prose ol {
+  @apply ml-6 mb-4 space-y-2;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose li {
+  @apply text-[var(--text-primary)];
+}
+
+.prose code {
+  @apply bg-[#1a1a1a] text-[#e06c75] px-1.5 py-0.5 rounded text-[13px] font-mono;
+}
+
+.prose pre {
+  @apply bg-[#1a1a1a] rounded-xl p-4 my-4 overflow-x-auto border border-[var(--border)];
+}
+
+.prose pre code {
+  @apply bg-transparent text-[var(--text-primary)] p-0 text-[13px];
+}
+
+.prose blockquote {
+  @apply border-l-2 border-[var(--accent)] pl-4 italic text-[var(--text-secondary)] my-4;
+}
+
+.prose a {
+  @apply text-[var(--accent)] underline underline-offset-2 hover:opacity-80 transition-opacity;
+}
+
+.prose table {
+  @apply w-full border-collapse my-4;
+}
+
+.prose th {
+  @apply bg-[var(--bg-tertiary)] text-left px-4 py-2.5 text-sm font-medium text-[var(--text-secondary)] border border-[var(--border)];
+}
+
+.prose td {
+  @apply px-4 py-2.5 text-sm border border-[var(--border)];
+}
+
+.prose strong {
+  @apply text-white font-semibold;
+}
+
+/* ── Animations ────────────────────────────────────── */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-dot {
+
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.typing-indicator span {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin: 0 2px;
+  animation: pulse-dot 1.4s ease-in-out infinite;
+}
+
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* ── Utility ───────────────────────────────────────── */
+.glass-modal {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+}

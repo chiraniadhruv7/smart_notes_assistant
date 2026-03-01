@@ -212,3 +212,27 @@ rag/
 venv/
 env/
 
+# Data directories (user uploads & knowledge base)
+data/uploads/
+data/knowledge/
+
+# Node.js
+node_modules/
+.next/
+out/
+
+# Docker volumes
+docker/volumes/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Smart Notes specific
+smart_notes/
